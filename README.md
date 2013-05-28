@@ -1,6 +1,8 @@
-This project shows how to build a basic Scala Web application using sbt and [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin).
+# Getting started with xsbt-web-plugin
 
-## Getting started
+This project shows how to build a basic Scala Web application using sbt and [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin).  To get started, either clone this project or follow the steps below to recreate it.
+
+## Starting from scratch
 
 Create a new empty project:
 
