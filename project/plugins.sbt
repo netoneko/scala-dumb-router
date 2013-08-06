@@ -1,1 +1,3 @@
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.3.0")
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.0-SNAPSHOT")
