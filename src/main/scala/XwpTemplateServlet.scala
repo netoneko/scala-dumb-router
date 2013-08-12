@@ -8,9 +8,6 @@ class XwpTemplateServlet extends HttpServlet {
   import javax.servlet.http.HttpServletRequest
   import javax.servlet.http.HttpServletResponse
 
-  get("/", new Handler)
-  get("/hello", new Handler)
-
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
 
     response.setContentType("text/html")
@@ -19,11 +16,8 @@ class XwpTemplateServlet extends HttpServlet {
     Router.route(request, response)
   }
 
-  class Handler {
-    def handle(request: HttpServletRequest, response: HttpServletResponse) {
-      val responseBody: NodeSeq = <html><body><h1>Hello, world!</h1></body></html>
-      response.getWriter.write(responseBody.toString)
-    }
+  trait Handler {
+    def handle(request: HttpServletRequest, response: HttpServletResponse)
   }
 
   class NotFoundHandler extends Handler {
@@ -34,7 +28,7 @@ class XwpTemplateServlet extends HttpServlet {
   }
 
   object Router {
-    val routes = scala.collection.mutable.Map[String,Handler]()
+    val routes = scala.collection.mutable.Map[String, Handler]()
 
     def route(request: HttpServletRequest, response: HttpServletResponse) {
       println(request.getRequestURI())
@@ -49,4 +43,18 @@ class XwpTemplateServlet extends HttpServlet {
   def get(url: String, handler: Handler) = {
     Router.routes(url) = handler
   }
+
+  get("/", new Handler {
+    def handle(request: HttpServletRequest, response: HttpServletResponse) {
+      val responseBody: NodeSeq = <html><body><h1>Hello, world!</h1></body></html>
+      response.getWriter.write(responseBody.toString)
+    }
+  })
+
+  get("/hello", new Handler {
+    def handle(request: HttpServletRequest, response: HttpServletResponse) {
+      val responseBody: NodeSeq = <html><body><h1>Hello!</h1></body></html>
+      response.getWriter.write(responseBody.toString)
+    }
+  })
 }
