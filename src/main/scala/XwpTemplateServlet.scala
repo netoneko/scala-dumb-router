@@ -28,7 +28,7 @@ class XwpTemplateServlet extends HttpServlet {
   }
 
   object Router {
-    val routes = scala.collection.mutable.Map[String, Handler]()
+    val routes = scala.collection.mutable.Map[String, Handler]() //{def handle(request: HttpServletRequest,response: HttpServletResponse):Any}]()
 
     def route(request: HttpServletRequest, response: HttpServletResponse) {
       println(request.getRequestURI())
@@ -44,6 +44,12 @@ class XwpTemplateServlet extends HttpServlet {
     Router.routes(url) = handler
   }
 
+  def get(url: String, handler: ((HttpServletRequest,HttpServletResponse) => Any)) = {
+    Router.routes(url) = new Handler {
+      def handle(request: HttpServletRequest, response: HttpServletResponse) = handler(request, response)
+    }
+  }
+
   get("/", new Handler {
     def handle(request: HttpServletRequest, response: HttpServletResponse) {
       val responseBody: NodeSeq = <html><body><h1>Hello, world!</h1></body></html>
@@ -51,10 +57,9 @@ class XwpTemplateServlet extends HttpServlet {
     }
   })
 
-  get("/hello", new Handler {
-    def handle(request: HttpServletRequest, response: HttpServletResponse) {
+  get("/hello", (request: HttpServletRequest, response: HttpServletResponse) => {
       val responseBody: NodeSeq = <html><body><h1>Hello!</h1></body></html>
       response.getWriter.write(responseBody.toString)
     }
-  })
+  )
 }
