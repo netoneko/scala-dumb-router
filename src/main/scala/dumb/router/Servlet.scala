@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import dumb.router.Router.route
+import dumb.router.impl.{RealRequest,RealResponse}
 
 class Servlet extends HttpServlet {
   override def doGet(req: HttpServletRequest, res: HttpServletResponse) {

@@ -1,5 +1,7 @@
 package dumb.router
 
+import dumb.router.impl.NotFoundHandler
+
 object Router {
   val routes = scala.collection.mutable.Map[String, Handler]()
 
