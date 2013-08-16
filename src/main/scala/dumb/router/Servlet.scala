@@ -4,11 +4,14 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class Servlet extends HttpServlet {
-  override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
-    response.setContentType("text/html")
-    response.setCharacterEncoding("UTF-8")
+import dumb.router.Router.route
 
-    Router.route(request, response)
+class Servlet extends HttpServlet {
+  override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+    res setStatus 200
+    res setContentType "text/html"
+    res setCharacterEncoding "UTF-8"
+
+    route (Request(req), Response(res))
   }
 }

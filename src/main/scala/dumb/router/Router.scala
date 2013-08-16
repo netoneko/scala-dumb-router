@@ -1,17 +1,14 @@
 package dumb.router
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-
 object Router {
-  val routes = scala.collection.mutable.Map[String, Handler]() //{def handle(request: HttpServletRequest,response: HttpServletResponse):Any}]()
+  val routes = scala.collection.mutable.Map[String, Handler]()
 
-  def route(request: HttpServletRequest, response: HttpServletResponse) {
-    println(request.getRequestURI())
-
-    (routes get request.getRequestURI() match {
+  def route(request: Request, response: Response) {
+    response write (routes get request.uri match {
       case Some(handler) => handler
       case None => new NotFoundHandler()
     }).handle(request, response)
+
+    println(s"${response.code} ${request.uri}")
   }
 }
