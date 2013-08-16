@@ -5,7 +5,7 @@ package object dsl {
     Router.routes(url) = handler
   }
 
-  def get(url: String, handler: ((Request,Response) => Any)) = {
+  def get(url: String, handler: ((Request, Response) => Any)) = {
     Router.routes(url) = new Handler {
       def handle(request: Request, response: Response) = handler(request, response)
     }

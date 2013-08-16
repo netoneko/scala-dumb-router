@@ -8,10 +8,14 @@ import dumb.router.Router.route
 
 class Servlet extends HttpServlet {
   override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+    getRequest(RealRequest(req), RealResponse(res))
+  }
+
+  def getRequest(req: Request, res: Response) {
     res setStatus 200
     res setContentType "text/html"
     res setCharacterEncoding "UTF-8"
 
-    route (Request(req), Response(res))
+    route(req, res)
   }
 }
