@@ -6,4 +6,10 @@ trait Request {
   def req: HttpServletRequest
 
   def uri = req getRequestURI
+
+  def params = req.getParameterMap.asInstanceOf[Map[String, Array[String]]]
+
+  def getParameter(key: String) = req.getParameter(key)
+
+  def getParameterValues(key: String) = req.getParameterValues(key)
 }
