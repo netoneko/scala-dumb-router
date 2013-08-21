@@ -1,15 +1,10 @@
 package dumb.router
 
-import javax.servlet.http.HttpServletRequest
-
 trait Request {
-  def req: HttpServletRequest
+  val uri: String
+  val params: collection.mutable.Map[String, Array[String]]
 
-  def uri = req getRequestURI
+  def getParameterValues(key: String) = params(key)
 
-  def params = req.getParameterMap.asInstanceOf[scala.collection.mutable.Map[String, Array[String]]]
-
-  def getParameter(key: String) = req.getParameter(key)
-
-  def getParameterValues(key: String) = req.getParameterValues(key)
+  def getParameter(key: String) = getParameterValues(key).head
 }

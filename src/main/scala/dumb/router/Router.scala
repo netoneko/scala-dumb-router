@@ -33,14 +33,10 @@ object Router {
   def matchKey(key: String, request: Request): Boolean = {
     if (key.contains(":")) {
       val pattern = buildPattern(key)
-      println(pattern)
 
-      pattern.findFirstMatchIn(key) match {
+      pattern.findFirstMatchIn(request.uri) match {
         case Some(result: Regex.Match) => {
-          println(result.group("name"))
-          request.params += ("name" -> Array(result.group("name")))
-          println(request.params)
-          println(request.getParameter("name"))
+          request.params("name") = Array(result.group("name"))
           true
         }
         case _ => false
