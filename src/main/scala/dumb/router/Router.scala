@@ -22,34 +22,34 @@ object Router {
     println(s"$method ${response.code} ${request.uri}")
   }
 
-  def buildPattern(urlPattern: String, keys: String*): Regex = {
-    val pattern = keys.foldLeft(urlPattern) {
-      (result, key) => result.replace(s":$key", "(\\w*)")
-    }
-
-    new Regex(pattern, keys: _*)
-  }
-
   def matchRoute(urlPattern: String, request: Request): Boolean = {
     if (urlPattern.contains(":")) {
-      val keys = new Regex( """(:\w*)""").findAllIn(urlPattern).map {
-        k => k.substring(1)
-      }.toSeq
-      val pattern = buildPattern(urlPattern, keys: _*)
-
-      pattern.findFirstMatchIn(request.uri) match {
-        case Some(result: Regex.Match) => {
-          keys.foreach {
-            key => request.params(key) = Array(result.group(key))
-          }
-
-          true
-        }
-        case _ => false
-      }
+      buildPattern(urlPattern, request)
     }
     else {
       request.uri == urlPattern
     }
   }
+
+  def buildPattern(urlPattern: String, request: Request): Boolean = {
+    val keys = new Regex( """(:\w*)""").findAllIn(urlPattern).map {
+      k => k.substring(1)
+    }.toSeq
+
+    val pattern = new Regex(keys.foldLeft(urlPattern) {
+      (result, key) => result.replace(s":$key", "(\\w*)")
+    }, keys: _*)
+
+    pattern.findFirstMatchIn(request.uri) match {
+      case Some(result: Regex.Match) => {
+        keys.foreach {
+          key => request.params(key) = Array(result.group(key))
+        }
+
+        true
+      }
+      case _ => false
+    }
+  }
+
 }
