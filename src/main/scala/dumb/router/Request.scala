@@ -7,7 +7,7 @@ trait Request {
 
   def uri = req getRequestURI
 
-  def params = req.getParameterMap.asInstanceOf[Map[String, Array[String]]]
+  def params = req.getParameterMap.asInstanceOf[scala.collection.mutable.Map[String, Array[String]]]
 
   def getParameter(key: String) = req.getParameter(key)
 

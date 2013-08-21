@@ -17,4 +17,9 @@ class XwpTemplateServlet extends Servlet {
       responseBody
     }
   )
+
+  get("/hello/:name", (req: Request, _: Response) => {
+    s"Hello, ${req getParameter "name"}!"
+  })
+
 }
