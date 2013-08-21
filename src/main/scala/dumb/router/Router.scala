@@ -22,7 +22,7 @@ object Router {
     println(s"$method ${response.code} ${request.uri}")
   }
 
-  def matchRoute(urlPattern: String, request: Request): Boolean = {
+  private def matchRoute(urlPattern: String, request: Request): Boolean = {
     if (urlPattern.contains(":")) {
       buildPattern(urlPattern, request)
     }
@@ -31,14 +31,19 @@ object Router {
     }
   }
 
-  def buildPattern(urlPattern: String, request: Request): Boolean = {
-    val keys = new Regex( """(:\w*)""").findAllIn(urlPattern).map {
-      k => k.substring(1)
-    }.toSeq
+  private val matcherCache = scala.collection.mutable.Map[String, (Seq[String], Regex)]()
 
-    val pattern = new Regex(keys.foldLeft(urlPattern) {
-      (result, key) => result.replace(s":$key", "(\\w*)")
-    }, keys: _*)
+  private def buildPattern(urlPattern: String, request: Request): Boolean = {
+    val (keys, pattern) = matcherCache.getOrElseUpdate(urlPattern, {
+      val paramNames = new Regex( """(:\w*)""").findAllIn(urlPattern).toSeq
+      val keys = paramNames.map { k => k.substring(1) }.toSeq
+
+      val pattern = new Regex(paramNames.foldLeft(urlPattern) {
+        (result, key) => result.replace(key, "(\\w*)")
+      }, keys: _*)
+
+      (keys, pattern)
+    })
 
     pattern.findFirstMatchIn(request.uri) match {
       case Some(result: Regex.Match) => {
@@ -51,5 +56,4 @@ object Router {
       case _ => false
     }
   }
-
 }
