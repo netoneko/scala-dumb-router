@@ -7,29 +7,24 @@ object Router {
   val getRoutes = scala.collection.mutable.Map[String, Handler]()
   val postRoutes = scala.collection.mutable.Map[String, Handler]()
 
-  def getRoute = route(getRoutes, _: Request, _: Response)
+  def getRoute = route("GET", getRoutes, _: Request, _: Response)
 
-  def postRoute = route(postRoutes, _: Request, _: Response)
+  def postRoute = route("POST", postRoutes, _: Request, _: Response)
 
-  private def route(routes: scala.collection.mutable.Map[String, Handler], request: Request, response: Response) {
+  private def route(method: String, routes: scala.collection.mutable.Map[String, Handler], request: Request, response: Response) {
     val route = routes.find {
       case (key, _) => matchRoute(key, request)
     }
 
-    val handler = route.size match {
-      case 1 => route.head._2
-      case _ => new NotFoundHandler()
-    }
-
+    val handler = if (route.isEmpty) new NotFoundHandler() else route.head._2
     response write (handler handle(request, response))
 
-    println(s"${response.code} ${request.uri}")
+    println(s"$method ${response.code} ${request.uri}")
   }
 
   def buildPattern(urlPattern: String, keys: String*): Regex = {
     val pattern = keys.foldLeft(urlPattern) {
-      (result, key) =>
-        result.replace(s":$key", "(\\w*)")
+      (result, key) => result.replace(s":$key", "(\\w*)")
     }
 
     new Regex(pattern, keys: _*)
