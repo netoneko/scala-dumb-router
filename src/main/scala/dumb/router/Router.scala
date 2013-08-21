@@ -13,7 +13,7 @@ object Router {
 
   private def route(routes: scala.collection.mutable.Map[String, Handler], request: Request, response: Response) {
     val route = routes.find {
-      case (key, _) => matchKey(key, request)
+      case (key, _) => matchRoute(key, request)
     }
 
     val handler = route.size match {
@@ -26,24 +26,35 @@ object Router {
     println(s"${response.code} ${request.uri}")
   }
 
-  def buildPattern(url: String): Regex = {
-    new Regex( """/hello/(\w*)""", "name")
+  def buildPattern(urlPattern: String, keys: String*): Regex = {
+    val pattern = keys.foldLeft(urlPattern) {
+      (result, key) =>
+        result.replace(s":$key", "(\\w*)")
+    }
+
+    new Regex(pattern, keys: _*)
   }
 
-  def matchKey(key: String, request: Request): Boolean = {
-    if (key.contains(":")) {
-      val pattern = buildPattern(key)
+  def matchRoute(urlPattern: String, request: Request): Boolean = {
+    if (urlPattern.contains(":")) {
+      val keys = new Regex( """(:\w*)""").findAllIn(urlPattern).map {
+        k => k.substring(1)
+      }.toSeq
+      val pattern = buildPattern(urlPattern, keys: _*)
 
       pattern.findFirstMatchIn(request.uri) match {
         case Some(result: Regex.Match) => {
-          request.params("name") = Array(result.group("name"))
+          keys.foreach {
+            key => request.params(key) = Array(result.group(key))
+          }
+
           true
         }
         case _ => false
       }
     }
     else {
-      request.uri == key
+      request.uri == urlPattern
     }
   }
 }

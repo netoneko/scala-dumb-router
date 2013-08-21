@@ -17,9 +17,14 @@ class TestAppSpec extends Specification {
     s"Hello, ${req getParameter "name"}!"
   })
 
-  get("/hello/:name", (req: Request, _: Response) => {
-    s"Hello, ${req getParameter "name"}!"
+  get("/hello/:name/number/:num", (req: Request, _: Response) => {
+    s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
   })
+
+  post("/post/:num", (req: Request, _: Response) => {
+    s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
+  })
+
 
   val testServlet = new TestServlet()
 
@@ -54,7 +59,7 @@ class TestAppSpec extends Specification {
   }
 
   "TestServlet.get with url params".should {
-    val req = new FakeRequest("/hello/servlet")
+    val req = new FakeRequest("/hello/servlet/number/1")
     val res = new FakeResponse
 
     testServlet.getRequest(req, res)
@@ -64,7 +69,23 @@ class TestAppSpec extends Specification {
     }
 
     "return expected message" in {
-      res.body mustEqual ("Hello, servlet!")
+      res.body mustEqual ("Hello, servlet #1!")
     }
   }
+
+  "TestServlet.post with url params".should {
+    val req = new FakeRequest("/post/1", scala.collection.mutable.Map("name" -> Array("Test")))
+    val res = new FakeResponse
+
+    testServlet.postRequest(req, res)
+
+    "set params" in {
+      res.code mustEqual (200)
+    }
+
+    "return expected message" in {
+      res.body mustEqual ("Hello, Test #1!")
+    }
+  }
+
 }
