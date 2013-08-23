@@ -7,12 +7,12 @@
   >
 
   <servlet>
-    <servlet-name>xwp template</servlet-name>
-    <servlet-class>com.earldouglas.xwptemplate.XwpTemplateServlet</servlet-class>
+    <servlet-name>simple servlet</servlet-name>
+    <servlet-class>dumb.router.example.SimpleServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>xwp template</servlet-name>
+    <servlet-name>simple servlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 

@@ -3,27 +3,26 @@ package dumb.router.test
 import org.specs2.mutable._
 
 import dumb.router._
-import dumb.router.dsl._
 
 class TestAppSpec extends Specification {
 
-  class TestServlet extends Servlet
+  class TestServlet extends Servlet {
+    get("/", (_, _) => {
+      "Hello!"
+    })
 
-  get("/", (_, _) => {
-    "Hello!"
-  })
+    post("/post", (req: Request, _: Response) => {
+      s"Hello, ${req getParameter "name"}!"
+    })
 
-  post("/post", (req: Request, _: Response) => {
-    s"Hello, ${req getParameter "name"}!"
-  })
+    get("/hello/:name/number/:num", (req: Request, _: Response) => {
+      s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
+    })
 
-  get("/hello/:name/number/:num", (req: Request, _: Response) => {
-    s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
-  })
-
-  post("/post/:num", (req: Request, _: Response) => {
-    s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
-  })
+    post("/post/:num", (req: Request, _: Response) => {
+      s"Hello, ${req getParameter "name"} #${req getParameter "num"}!"
+    })
+  }
 
 
   val testServlet = new TestServlet()

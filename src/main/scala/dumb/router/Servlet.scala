@@ -4,11 +4,11 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import dumb.router.Router.{getRoute, postRoute}
 import dumb.router.impl.{RealRequest,RealResponse}
 
-class Servlet extends HttpServlet {
+class Servlet extends HttpServlet with Dsl {
   override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+    println(req.getServletPath)
     getRequest(RealRequest(req), RealResponse(res))
   }
 
@@ -21,7 +21,7 @@ class Servlet extends HttpServlet {
     res setContentType "text/html"
     res setCharacterEncoding "UTF-8"
 
-    getRoute(req, res)
+    router.getRoute(req, res)
   }
 
   def postRequest(req: Request, res: Response) {
@@ -29,6 +29,6 @@ class Servlet extends HttpServlet {
     res setContentType "text/html"
     res setCharacterEncoding "UTF-8"
 
-    postRoute(req, res)
+    router.postRoute(req, res)
   }
 }

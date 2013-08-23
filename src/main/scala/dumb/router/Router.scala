@@ -3,7 +3,7 @@ package dumb.router
 import dumb.router.impl.NotFoundHandler
 import scala.util.matching.Regex
 
-object Router {
+class Router {
   val getRoutes = scala.collection.mutable.Map[String, Handler]()
   val postRoutes = scala.collection.mutable.Map[String, Handler]()
 
