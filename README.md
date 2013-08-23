@@ -1,77 +1,51 @@
-# Getting started with xsbt-web-plugin
+# Why Scala Dumb Router?
+
+No reason. It's not production ready and never will be.
+
+Features:
+* simple Sinatra-like dsl (get, post & stuff)
+* multiple servlet mappings to several servlet namespaces
+
+Will be supported in future:
+* helpers and helper functions
+* more thorough testing of apps that were built on top of SDR
+
+# Getting started with Scala Dumb Router
 
 This project shows how to build a basic Scala Web application using sbt and [xsbt-web-plugin](https://github.com/JamesEarlDouglas/xsbt-web-plugin).  To get started, either clone this project or follow the steps below to recreate it.
 
 ## Starting from scratch
 
-Create a new empty project:
-
-```
-mkdir xwp-template
-cd xwp-template
-```
-
-Set up the project structure:
-
-```
-mkdir project
-mkdir -p src/main/scala
-mkdir -p src/main/webapp/WEB-INF
-```
-
-Configure sbt:
-
-*project/build.properties*:
-
-```
-sbt.version=0.12.3
-```
-
-*project/plugins.sbt*:
-```
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.3.0")
-```
-
-*build.sbt*:
-```
-name := "xwp-template"
-
-organization := "com.earldouglas"
-
-version := "0.1.0-SNAPSHOT"
-
-scalaVersion := "2.10.1"
-
-seq(webSettings :_*)
-
-libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
-
-libraryDependencies += "javax.servlet" % "servlet-api" % "2.5" % "provided"
-```
+Clone repository and look at the basic structure of things.
 
 Add a servlet:
 
-*src/main/scala/XwpTemplateServlet.scala*:
+*src/main/scala/dumb/router/example/SimpleServlet.scala*:
 
 ```scala
-package com.earldouglas.xwptemplate
+package dumb.router.example
 
 import scala.xml.NodeSeq
-import javax.servlet.http.HttpServlet
+import dumb.router._
 
-class XwpTemplateServlet extends HttpServlet {
+class SimpleServlet extends Servlet {
+  get("/", new Handler {
+    def handle(request: Request, response: Response) = {
+      val responseBody: NodeSeq = <html><body><h1>Hello, world!</h1></body></html>
+      responseBody
+    }
+  })
 
-  import javax.servlet.http.HttpServletRequest
-  import javax.servlet.http.HttpServletResponse
+  get("/hello", (request: Request, response: Response) => {
+      val responseBody: NodeSeq = <html><body><h1>Hello!</h1></body></html>
+      responseBody
+    }
+  )
 
-  override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
+  get("/hello/:name", (req: Request, _: Response) => {
+    s"Hello, ${req getParameter "name"}!"
+  })
 
-    response.setContentType("text/html")
-    response.setCharacterEncoding("UTF-8")
-
-    val responseBody: NodeSeq = <html><body><h1>Hello, world!</h1></body></html>
-    response.getWriter.write(responseBody.toString)
-  }
 }
 ```
 
@@ -87,12 +61,12 @@ class XwpTemplateServlet extends HttpServlet {
   >
 
   <servlet>
-    <servlet-name>xwp template</servlet-name>
-    <servlet-class>com.earldouglas.xwptemplate.XwpTemplateServlet</servlet-class>
+    <servlet-name>simple servlet</servlet-name>
+    <servlet-class>dumb.router.example.SimpleServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>xwp template</servlet-name>
+    <servlet-name>simple servlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
@@ -105,7 +79,7 @@ From sbt, run the command `container:start`:
 
 ```
 > container:start
-[info] jetty-6.1.22
+[info] jetty-9.0.4.v20130625
 [info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
 [info] Started SelectChannelConnector@0.0.0.0:8080
 [success] Total time: 0 s, completed May 27, 2013 11:29:14 AM
@@ -119,7 +93,7 @@ $ curl -i localhost:8080
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
 Content-Length: 48
-Server: Jetty(6.1.22)
+Server: jetty-9.0.4.v20130625
 
 <html><body><h1>Hello, world!</h1></body></html>
 ```
