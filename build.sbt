@@ -1,6 +1,6 @@
-name := "xwp-template"
+name := "scala-dumb-router"
 
-organization := "com.earldouglas"
+organization := "com.netoneko"
 
 version := "0.1.0-SNAPSHOT"
 

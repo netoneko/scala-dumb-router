@@ -108,4 +108,4 @@ To build a WAR file suitable for deployment, run the command `package` from sbt:
 > 
 ```
 
-The WAR file can be found in *target/scala-2.10/xwp-template_2.10-0.1.0-SNAPSHOT.war*.
+The WAR file can be found in *target/scala-2.10/scala-dumb-router_2.10-0.1.0-SNAPSHOT.war*.
