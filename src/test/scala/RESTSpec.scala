@@ -4,7 +4,7 @@ import org.specs2.mutable._
 
 import dumb.router._
 
-class TestAppSpec extends Specification {
+class RESTSpec extends Specification {
 
   class TestServlet extends Servlet {
     get("/", (_, _) => {
