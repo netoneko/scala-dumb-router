@@ -3,7 +3,7 @@
 No reason. It's not production ready and never will be.
 
 Features:
-* simple Sinatra-like dsl (get, post & stuff)
+* simple Sinatra-like dsl for basic REST (get, post, put, delete)
 * multiple servlet mappings to several servlet namespaces
 
 Will be supported in future:

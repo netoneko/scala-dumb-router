@@ -6,10 +6,16 @@ import scala.util.matching.Regex
 class Router {
   val getRoutes = scala.collection.mutable.Map[String, Handler]()
   val postRoutes = scala.collection.mutable.Map[String, Handler]()
+  val putRoutes = scala.collection.mutable.Map[String, Handler]()
+  val deleteRoutes = scala.collection.mutable.Map[String, Handler]()
 
   def getRoute = route("GET", getRoutes, _: Request, _: Response)
 
   def postRoute = route("POST", postRoutes, _: Request, _: Response)
+
+  def putRoute = route("PUT", putRoutes, _: Request, _: Response)
+
+  def deleteRoute = route("DELETE", deleteRoutes, _: Request, _: Response)
 
   private def route(method: String, routes: scala.collection.mutable.Map[String, Handler], request: Request, response: Response) {
     val route = routes.find {

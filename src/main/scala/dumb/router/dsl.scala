@@ -4,12 +4,16 @@ trait Dsl {
   val router = new Router()
 
   def get(url: String, handler: Handler) = addHandler(router.getRoutes, url, handler)
-
   def get(url: String, handler: ((Request, Response) => Any)) = addCallback(router.getRoutes, url, handler)
 
   def post(url: String, handler: Handler) = addHandler(router.postRoutes, url, handler)
-
   def post(url: String, handler: ((Request, Response) => Any)) = addCallback(router.postRoutes, url, handler)
+
+  def put(url: String, handler: Handler) = addHandler(router.putRoutes, url, handler)
+  def put(url: String, handler: ((Request, Response) => Any)) = addCallback(router.putRoutes, url, handler)
+
+  def delete(url: String, handler: Handler) = addHandler(router.deleteRoutes, url, handler)
+  def delete(url: String, handler: ((Request, Response) => Any)) = addCallback(router.deleteRoutes, url, handler)
 
   private def addHandler(routes: scala.collection.mutable.Map[String, Handler], url: String, handler: Handler) = {
     router.getRoutes(url) = handler
